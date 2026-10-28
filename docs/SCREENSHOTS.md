@@ -9,12 +9,9 @@
 - [ ] left panel keybinds
 - [ ] right panel calendar
 - [ ] right panel resources
-- [ ] wallpaper switcher
+- [ ] wallpaper switcher (local view)
+- [ ] wallpaper switcher (Wallhaven view)
+- [ ] wallhaven browser search results
+- [ ] wallhaven browser download overlay
 - [ ] lock screen
 - [ ] light/dark toggle
-EOF
-# migrations example
-cat > /home/hell/eclipsecalis/migrations/001_init.py <<'EOF'
-print("migration 001: init")
-EOF
-echo done

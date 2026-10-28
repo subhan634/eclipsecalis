@@ -15,6 +15,7 @@
 - 🚀 Quickshell bar, launcher (apps / clipboard / emoji / math / urls / commands), notifications, OSD
 - 📐 Left/right side panels (chatbot, booru, settings, keybinds; calendar, resources, crypto, weather)
 - ⚙️ Hyprland Lua config, workspace rules, complete keybind set
+- 🌐 **Wallhaven browser** with one-click download, thumbnail grid, search filters, and API key management
 
 ## 🚀 Quick Start
 
@@ -39,10 +40,22 @@ Update: `eclipsecalis update` · Doctor: `eclipsecalis doctor` · Uninstall: `ec
 │ SUPER + M          │ Left panel                           │
 │ SUPER + T          │ Theme toggle (light/dark)            │
 │ SUPER + W          │ Wallpaper picker                     │
+│ SUPER + SHIFT + W  │ Wallhaven browser toggle             │
+│ Tab (inside picker)│ Switch Local / Wallhaven views       │
 └────────────────────┴──────────────────────────────────────┘
 ```
 
 Full keybind set: `config/hypr/config/binds.lua`
+
+## 🌐 Wallhaven Browser
+
+- **SUPER+W** opens the wallpaper selector with local wallpapers
+- **SUPER+Shift+W** toggles the Wallhaven browser view
+- **Tab** inside the selector switches between Local and Wallhaven views
+- **No API key needed** for SFW wallpapers (default mode)
+- **API key** unlocks sketchy/NSFW content (optional, stored in `~/.config/eclipsecalis/secrets.json` with chmod 600)
+- Get your free API key: `eclipsecalis wallhaven api-key` (opens wallhaven.cc/settings/account)
+- Download to `~/.config/eclipsecalis/wallpapers/custom/`
 
 ## 📜 License
 

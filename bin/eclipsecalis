@@ -30,8 +30,7 @@ def cmd_toggle(_):
     s["mode"] = "light" if s.get("mode", "dark") == "dark" else "dark"
     os.makedirs(CONFIG, exist_ok=True)
     json.dump(s, open(settings, "w"), indent=2)
-    run([os.path.join(INSTALL_DIR, "scripts", "theme-apply.sh")] if False else
-        [os.path.expanduser("~/.config/eclipsecalis/scripts/theme-apply.sh")])
+    run(["bash", os.path.join(INSTALL_DIR, "scripts", "theme-apply.sh")])
     # fallback path
     run(["bash", "-c", "eclipsecalis_dir=$HOME/.local/share/eclipsecalis; ~/.config/eclipsecalis/scripts/theme-apply.sh \"$(cat ~/.cache/eclipsecalis/last_wallpaper)\""])
 
@@ -50,7 +49,19 @@ def cmd_uninstall(_):
         install = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "install.py")
     run([sys.executable, install, "--uninstall"])
 
+
+def cmd_wallhaven(args):
+    """Delegate Wallhaven commands to the Python helper."""
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts", "wallhaven.py")
+    # Pass the subcommand to the Python helper; helper's __main__ parses sys.argv
+    run([sys.executable, script, args.subcommand])
+
 def main():
+    # Handle wallhaven separately - delegate to Python helper
+    if len(sys.argv) > 1 and sys.argv[1] == 'wallhaven':
+        cmd_wallhaven_from_sysargv()
+        return
+
     p = argparse.ArgumentParser(prog="eclipsecalis")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("version").set_defaults(func=cmd_version)
@@ -61,6 +72,18 @@ def main():
     sub.add_parser("uninstall").set_defaults(func=cmd_uninstall)
     args = p.parse_args()
     args.func(args)
+
+def cmd_wallhaven_from_sysargv():
+    """Delegate Wallhaven commands using sys.argv directly."""
+    # sys.argv[0] = eclipsecalis, sys.argv[1] = wallhaven, sys.argv[2] = subcommand, rest = args
+    if len(sys.argv) < 3:
+        print("Usage: eclipsecalis wallhaven <search|download|info|list_local> [args]", file=sys.stderr)
+        sys.exit(1)
+    subcmd = sys.argv[2]
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts", "wallhaven.py")
+    # Run the helper with the subcommand and remaining args
+    import subprocess
+    subprocess.run([sys.executable, script, subcmd] + sys.argv[3:], env=os.environ)
 
 if __name__ == "__main__":
     main()
