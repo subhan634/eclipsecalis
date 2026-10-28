@@ -45,7 +45,10 @@ def cmd_doctor(_):
     run(["bash", "-c", "command -v hyprctl && hyprctl version; command -v quickshell; command -v matugen; command -v mpvpaper"])
 
 def cmd_uninstall(_):
-    print("Run install.py --uninstall")
+    install = os.path.join(INSTALL_DIR, "install.py")
+    if not os.path.exists(install):
+        install = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "install.py")
+    run([sys.executable, install, "--uninstall"])
 
 def main():
     p = argparse.ArgumentParser(prog="eclipsecalis")

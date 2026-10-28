@@ -28,6 +28,34 @@ def bootstrap_rich():
 
 HAS_RICH = bootstrap_rich()
 
+
+
+def uninstall():
+    import glob as _g
+    L = print
+    # remove CLI symlink
+    cli = os.path.join(HOME, ".local/bin/eclipsecalis")
+    if os.path.islink(cli) or os.path.exists(cli):
+        try: os.remove(cli)
+        except IsADirectoryError: shutil.rmtree(cli)
+        L(f"removed {cli}")
+    # remove config symlinks pointing at install dir
+    for name in os.listdir(CONFIG):
+        pth = os.path.join(CONFIG, name)
+        if os.path.islink(pth):
+            target = os.readlink(pth)
+            if INSTALL_DIR in target or "eclipsecalis" in target:
+                os.remove(pth)
+                L(f"removed link {pth}")
+    # remove state, cache, install dir
+    for d in (STATE, os.path.expanduser("~/.cache/eclipsecalis"), INSTALL_DIR):
+        if os.path.exists(d):
+            shutil.rmtree(d, ignore_errors=True)
+            L(f"removed {d}")
+    # remove any .bak backups? keep user backups? remove eclipsecalis backups
+    L("eclipsecalis uninstalled. Backups (*.bak.*) left in ~/.config if present.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
@@ -61,6 +89,9 @@ def main():
 
     if args.dry_run:
         print("dry-run: would install. exiting."); return
+
+    if args.uninstall:
+        uninstall(); return
 
     os.makedirs(STATE, exist_ok=True)
     log = open(os.path.join(STATE, "install.log"), "w")  # noqa: SIM115
