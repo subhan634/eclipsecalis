@@ -1,0 +1,14 @@
+# eclipsecalis .gitignore
+*.log
+*.bak
+*~
+.DS_Store
+__pycache__/
+*.pyc
+.cache/
+*.o
+*.so
+node_modules/
+.env
+secrets/
+*.key

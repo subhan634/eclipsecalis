@@ -1,0 +1,27 @@
+hl.animations = {
+  enabled = true,
+  bezier = {
+    easeOutQuint = "0.23, 1, 0.32, 1",
+    easeInOutCubic = "0.65, 0.05, 0.36, 1",
+    linear = "0, 0, 1, 1",
+    quick = "0.15, 0, 0.1, 1",
+  },
+  animation = {
+    "global, 1, 8, default",
+    "border, 1, 4, easeOutQuint",
+    "windows, 1, 4, easeOutQuint",
+    "windowsIn, 1, 3, easeOutQuint, popin 87%",
+    "windowsOut, 1, 2, linear, popin 87%",
+    "fadeIn, 1, 2, easeOutQuint",
+    "fadeOut, 1, 2, easeOutQuint",
+    "fade, 1, 2, quick",
+    "layers, 1, 3, easeOutQuint",
+    "layersIn, 1, 3, easeOutQuint, fade",
+    "layersOut, 1, 2, linear, fade",
+    "fadeLayersIn, 1, 2, quick",
+    "fadeLayersOut, 1, 2, quick",
+    "workspaces, 1, 4, easeOutQuint, slide",
+    "workspacesIn, 1, 4, easeOutQuint, slide",
+    "workspacesOut, 1, 4, easeOutQuint, slide",
+  },
+}
