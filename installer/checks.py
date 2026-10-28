@@ -1,6 +1,7 @@
 """checks module."""
 import shutil
 
+
 def has(cmd):
     return shutil.which(cmd) is not None
 
@@ -12,6 +13,5 @@ def internet():
         import urllib.request
         urllib.request.urlopen("https://archlinux.org", timeout=5)
         return True
-    except Exception:
+    except Exception:  # noqa: BLE001
         return False
-EOF
