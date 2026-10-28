@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""eclipsecalis CLI."""
+import argparse, json, os, subprocess, sys
+
+CONFIG = os.path.expanduser("~/.config/eclipsecalis")
+CACHE = os.path.expanduser("~/.cache/eclipsecalis")
+INSTALL_DIR = os.path.expanduser("~/.local/share/eclipsecalis")
+VERSION = "0.1.0"
+
+def run(cmd, **kw):
+    return subprocess.run(cmd, **kw)
+
+def cmd_version(_):
+    print(f"eclipsecalis {VERSION}")
+
+def cmd_update(args):
+    update = os.path.join(INSTALL_DIR, "update.py")
+    if not os.path.exists(update):
+        update = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "update.py")
+    cmd = [sys.executable, update]
+    if args.check: cmd.append("--check")
+    if args.rollback: cmd += ["--rollback", args.rollback]
+    run(cmd)
+
+def cmd_toggle(_):
+    settings = os.path.join(CONFIG, "settings.json")
+    s = {}
+    if os.path.exists(settings):
+        s = json.load(open(settings))
+    s["mode"] = "light" if s.get("mode", "dark") == "dark" else "dark"
+    os.makedirs(CONFIG, exist_ok=True)
+    json.dump(s, open(settings, "w"), indent=2)
+    run([os.path.join(INSTALL_DIR, "scripts", "theme-apply.sh")] if False else
+        [os.path.expanduser("~/.config/eclipsecalis/scripts/theme-apply.sh")])
+    # fallback path
+    run(["bash", "-c", "eclipsecalis_dir=$HOME/.local/share/eclipsecalis; ~/.config/eclipsecalis/scripts/theme-apply.sh \"$(cat ~/.cache/eclipsecalis/last_wallpaper)\""])
+
+def cmd_wallpaper(args):
+    if args.path:
+        run(["bash", os.path.expanduser("~/.config/eclipsecalis/scripts/wallpaper-apply.sh"), "global"])
+    else:
+        run(["quickshell", "ipc", "call", "wallpaper", "open"])
+
+def cmd_doctor(_):
+    run(["bash", "-c", "command -v hyprctl && hyprctl version; command -v quickshell; command -v matugen; command -v mpvpaper"])
+
+def cmd_uninstall(_):
+    print("Run install.py --uninstall")
+
+def main():
+    p = argparse.ArgumentParser(prog="eclipsecalis")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("version").set_defaults(func=cmd_version)
+    u = sub.add_parser("update"); u.add_argument("--check", action="store_true"); u.add_argument("--rollback"); u.set_defaults(func=cmd_update)
+    sub.add_parser("toggle").set_defaults(func=cmd_toggle)
+    w = sub.add_parser("wallpaper"); w.add_argument("path", nargs="?"); w.set_defaults(func=cmd_wallpaper)
+    sub.add_parser("doctor").set_defaults(func=cmd_doctor)
+    sub.add_parser("uninstall").set_defaults(func=cmd_uninstall)
+    args = p.parse_args()
+    args.func(args)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,17 @@
+name: lint
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: |
+          sudo apt-get install -y shellcheck
+          find . -name '*.sh' -print0 | xargs -0 -r shellcheck
+      - name: ruff
+        run: |
+          pip install ruff
+          ruff check .
+      - name: python compile
+        run: python -m compileall -q .
