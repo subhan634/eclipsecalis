@@ -6,7 +6,7 @@ Polished Arch Linux + Hyprland desktop environment. Dynamic theming from wallpap
 
 Method 1 (one-liner):
 ```
-python3 <(curl -fsSL https://raw.githubusercontent.com/subhan634/eclipsecalis/main/install.py)
+curl -fsSL https://raw.githubusercontent.com/subhan634/eclipsecalis/main/install.py | python3
 ```
 
 Method 2 (manual):
